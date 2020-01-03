@@ -1,5 +1,3 @@
-# microserviceWithKubeNAutomatedPipeline
-
 DevOps CI CD with toolset setup and configuration, Static code analysis, build, containerization, antifactory, smoke test,  automated regression, deploy in Kubernetes  
 
 
