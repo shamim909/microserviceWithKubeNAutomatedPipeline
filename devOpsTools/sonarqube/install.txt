@@ -1,0 +1,15 @@
+Ref: https://coderise.io/installing-sonarqube-in-kubernetes/
+1. git clone https://github.com/coderise-lab/k8s-sonarqube
+2. kubectl -n devops create secret generic postgres-pwd --from-literal=password=CodeRise_Pass
+3. kubectl -n devops create -f sonar-pv-postgres.yaml     
+4. kubectl -n devops create -f sonar-pvc-postgres.yaml  
+5. kubectl -n devops create -f sonar-postgres-deployment.yaml  
+6. kubectl -n devops create -f sonarqube-deployment.yaml
+7. kubectl -n devops create -f sonarqube-service.yaml
+8. kubectl -n devops create -f sonar-postgres-service.yaml 
+9. access the URL http://node-ip:31815/sonar
+10. sonar-scanner \
+-Dsonar.projectKey=XXX \
+-Dsonar.sources=. \
+-Dsonar.host.url=http://node-ip:31815/sonar \
+-Dsonar.login=xxxx
