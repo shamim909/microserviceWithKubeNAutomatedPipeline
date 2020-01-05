@@ -1,0 +1,78 @@
+sudo yum -y install epel-release
+sudo yum -y update
+
+#install database
+sudo rpm -Uvh https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm
+sudo yum -y install postgresql96-server postgresql96-contrib
+
+
+#config database
+sudo /usr/pgsql-9.6/bin/postgresql96-setup initdb
+sudo vi /var/lib/pgsql/9.6/data/pg_hba.conf
+#update below entry
+      host    all             all             127.0.0.1/32            md5
+      # IPv6 local connections:
+      
+      host    all             all             ::1/128                 md5
+      
+sudo systemctl start postgresql-9.6
+sudo systemctl enable postgresql-9.6
+
+sudo passwd postgres
+su - postgres
+createuser sonar
+psql
+ALTER USER sonar WITH ENCRYPTED password 'Sonar@123';
+CREATE DATABASE sonar OWNER sonar;
+\q
+exit
+
+#download and install sonar
+wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.1.0.31237.zip
+sudo unzip sonarqube-8.1.0.31237.zip -d /opt
+
+sudo vi /opt/sonarqube-8.1.0.31237/conf/sonar.properties
+     #Update JDBC user password and JDBC URL
+
+
+#Create a sonar service
+
+sudo vi /etc/systemd/system/sonar.service
+=====================
+[Unit]
+Description=SonarQube service
+After=syslog.target network.target
+
+[Service]
+Type=forking
+
+ExecStart=/opt/sonarqube-8.1.0.31237/bin/linux-x86-64/sonar.sh start
+ExecStop=/opt/sonarqube-8.1.0.31237/bin/linux-x86-64/sonar.sh stop
+
+User=root
+Group=root
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+==============================
+
+#service start
+sudo systemctl start sonar
+sudo systemctl enable sonar
+sudo systemctl status sonar
+
+Optional --
+---------------------
+sudo firewall-cmd --state
+#disable
+sudo systemctl stop firewalld
+sudo systemctl disable firewalld
+
+#or add 9000 port to it
+
+
+
+
+
+     
